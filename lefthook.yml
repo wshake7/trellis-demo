@@ -1,0 +1,26 @@
+# lefthook configuration
+#
+# Why lefthook instead of Vite+'s built-in hooks?
+# Vite+ ships a `vp config` installer that copies `.vite-hooks/pre-commit` into
+# `.git/hooks/` during `pnpm install`. We moved to lefthook so the hook layout
+# is driven by a single, version-controlled `lefthook.yml` and not by an install
+# side effect. The behavior is kept identical: pre-commit runs `vp staged`,
+# which formats / lints / type-checks the staged files (see `vite.config.ts`).
+#
+# Escape hatches (equivalent to Vite+'s `VITE_GIT_HOOKS=0`):
+#   - `LEFTHOOK=0 git commit ...`        # skip via env var
+#   - `git commit --no-verify ...`       # skip via git flag
+#   - `LEFTHOOK=0 pnpm exec lefthook run pre-commit`  # bypass when invoking directly
+#
+# Docs:
+#   - https://lefthook.dev/configuration/
+#   - https://viteplus.dev/guide/commit-hooks
+
+pre-commit:
+  # Mirrors Vite+'s default pre-commit behavior: run fmt + lint + type-check
+  # only against staged files. `pnpm exec` ensures `vp` is resolved from
+  # `node_modules/.bin` even when lefthook runs in a subshell without the
+  # workspace's PATH.
+  commands:
+    staged:
+      run: pnpm exec vp staged
