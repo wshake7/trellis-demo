@@ -1,0 +1,4 @@
+{"file": ".trellis/tasks/06-14-admin-db-design/prd.md", "reason": "本任务的需求与验收标准（12 项决策已收口）"}
+{"file": ".trellis/tasks/06-14-admin-db-design/design.md", "reason": "本任务的技术设计：表清单、命名、ER、索引、权衡"}
+{"file": ".trellis/tasks/06-14-admin-db-design/implement.md", "reason": "本任务的执行计划：DDL 顺序、验证、回滚、策略"}
+{"file": ".trellis/spec/backend/database-guidelines.md", "reason": "项目 DB 规范（当前为模板，但需读取以确认无既有约定可冲突）"}
