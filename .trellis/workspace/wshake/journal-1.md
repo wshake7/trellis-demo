@@ -68,3 +68,36 @@ java-admin-backend Phase 3 收尾。Spring Boot 4.0.3 + Java 17 + 4 模块 Maven
 ### Next Steps
 
 - None - task complete
+
+## Session 3: 集成 Spotless + palantir-java-format + Checkstyle
+
+**Date**: 2026-06-15
+**Task**: 集成 Spotless + palantir-java-format + Checkstyle
+**Branch**: `chore/spotless-palantir-format`
+
+### Summary
+
+为 backend/java-admin 接入两个互补的 Java 工具链：Spotless（palantir-java-format 2.92.0）自动格式化，Checkstyle（Palantir Baseline 3.6.0）静态检查。父 POM 注册两个插件（spotless 全模块生效，checkstyle 绑 verify phase + severity=error + propertyExpansion 注入 config_loc + sourceDirectories 排除 APT 输出），新增 build-tools/checkstyle/ 目录统一规则集与基线屏蔽，lefthook.yml 加 pre-commit spotless (apply + stage_fixed) + pre-push checkstyle (check) 与现有 vp staged 并存。提交策略两段：先 chore: apply palantir-java-format（21 个 Java 文件格式化），再 chore(build): integrate 工具链 + spec 同步。Phase 3.1 trellis-check 9 个质量门全通过，0 回归。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash      | Message       |
+| --------- | ------------- |
+| `fdca6fc` | (see git log) |
+| `a640ba1` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
