@@ -2,9 +2,8 @@ package com.wshake.common.result;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 /**
  * 统一响应体（3 字段 Q13 决策）。

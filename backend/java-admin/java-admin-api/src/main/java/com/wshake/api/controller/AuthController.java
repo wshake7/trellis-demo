@@ -68,11 +68,6 @@ public class AuthController {
             throw new BizException(ResultCode.INTERNAL_ERROR, "用户不存在");
         }
         return Result.ok(new UserInfoVO(
-                user.getId(),
-                user.getUsername(),
-                user.getNickname(),
-                user.getStatus(),
-                user.getCreateTime()
-        ));
+                user.getId(), user.getUsername(), user.getNickname(), user.getStatus(), user.getCreateTime()));
     }
 }

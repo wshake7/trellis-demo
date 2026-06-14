@@ -25,7 +25,8 @@ public class SysUserRepository {
      * @return 用户实体，未找到返回 {@code null}
      */
     public SysUser findByUsername(String username) {
-        return easyEntityQuery.queryable(SysUser.class)
+        return easyEntityQuery
+                .queryable(SysUser.class)
                 .where(u -> u.username().eq(username))
                 .firstOrNull();
     }
@@ -37,7 +38,8 @@ public class SysUserRepository {
      * @return 用户实体，未找到返回 {@code null}
      */
     public SysUser findById(Long id) {
-        return easyEntityQuery.queryable(SysUser.class)
+        return easyEntityQuery
+                .queryable(SysUser.class)
                 .where(u -> u.id().eq(id))
                 .firstOrNull();
     }

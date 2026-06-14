@@ -13,8 +13,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
 /**
  * Controller 请求日志切面。
  *

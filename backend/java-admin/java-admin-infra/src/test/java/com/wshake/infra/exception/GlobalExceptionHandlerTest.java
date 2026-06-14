@@ -1,5 +1,7 @@
 package com.wshake.infra.exception;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.wshake.common.exception.AuthException;
 import com.wshake.common.exception.BizException;
 import com.wshake.common.result.Result;
@@ -7,8 +9,6 @@ import com.wshake.common.result.ResultCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * {@link GlobalExceptionHandler} 单元测试。
@@ -52,7 +52,8 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleAny_returns500_andHidesRealMessage() {
-        ResponseEntity<Result<Object>> resp = handler.handleAny(new RuntimeException("SQL: SELECT * FROM x WHERE id=1"));
+        ResponseEntity<Result<Object>> resp =
+                handler.handleAny(new RuntimeException("SQL: SELECT * FROM x WHERE id=1"));
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         assertThat(resp.getBody().getCode()).isEqualTo(ResultCode.INTERNAL_ERROR.getCode());

@@ -1,6 +1,6 @@
 package com.wshake.infra.config;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 /**
  * Redisson / Flyway / Jackson / Sa-Token 启动失败回归测试。
@@ -134,7 +133,9 @@ class RedissonAutoconfigCheckTest {
      */
     private String readFile(String path) throws IOException {
         File f = new File(path);
-        assertThat(f).as("file " + path + " (cwd=" + new File(".").getAbsolutePath() + ")").exists();
+        assertThat(f)
+                .as("file " + path + " (cwd=" + new File(".").getAbsolutePath() + ")")
+                .exists();
         try (InputStream in = new FileInputStream(f)) {
             try (Scanner s = new Scanner(in, StandardCharsets.UTF_8)) {
                 return s.useDelimiter("\\A").hasNext() ? s.next() : "";

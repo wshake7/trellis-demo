@@ -7,6 +7,7 @@ import com.wshake.common.exception.AuthException;
 import com.wshake.common.exception.BizException;
 import com.wshake.common.result.Result;
 import com.wshake.common.result.ResultCode;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.stream.Collectors;
 
 /**
  * 全局异常处理器。
@@ -39,17 +38,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Result<Object>> handleAuth(AuthException e) {
         log.warn("[AUTH] code={} msg={} traceId={}", e.getCode(), e.getMessage(), MDC.get("traceId"));
-        HttpStatus status = e.getCode() == ResultCode.AUTH_FORBIDDEN.getCode()
-                ? HttpStatus.FORBIDDEN
-                : HttpStatus.UNAUTHORIZED;
+        HttpStatus status =
+                e.getCode() == ResultCode.AUTH_FORBIDDEN.getCode() ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
         return ResponseEntity.status(status).body(Result.error(e.getCode(), e.getMessage()));
     }
 
     @ExceptionHandler(NotLoginException.class)
     public ResponseEntity<Result<Object>> handleNotLogin(NotLoginException e) {
         log.warn("[SA_TOKEN] notLogin type={} msg={} traceId={}", e.getType(), e.getMessage(), MDC.get("traceId"));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Result.error(ResultCode.AUTH_NOT_LOGIN));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Result.error(ResultCode.AUTH_NOT_LOGIN));
     }
 
     @ExceptionHandler(NotRoleException.class)
@@ -72,15 +69,13 @@ public class GlobalExceptionHandler {
                 .map(fe -> fe.getField() + " " + fe.getDefaultMessage())
                 .collect(Collectors.joining("; "));
         log.warn("[VALIDATION] {} traceId={}", msg, MDC.get("traceId"));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Result.error(ResultCode.PARAM_INVALID, msg));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Result.error(ResultCode.PARAM_INVALID, msg));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Result<Object>> handleNotReadable(HttpMessageNotReadableException e) {
         log.warn("[REQ_BODY] not readable traceId={}", MDC.get("traceId"));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Result.error(ResultCode.PARAM_INVALID, "请求体格式错误"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Result.error(ResultCode.PARAM_INVALID, "请求体格式错误"));
     }
 
     @ExceptionHandler(Exception.class)

@@ -17,7 +17,6 @@ import lombok.Getter;
  */
 @Getter
 public enum ResultCode {
-
     SUCCESS(0, "ok"),
 
     PARAM_INVALID(1001, "参数错误"),

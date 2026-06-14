@@ -1,5 +1,6 @@
 package com.wshake.infra.config;
 
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
@@ -11,8 +12,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import javax.sql.DataSource;
 
 /**
  * Flyway 迁移触发器（手动执行）。
@@ -27,7 +26,7 @@ import javax.sql.DataSource;
  */
 @Slf4j
 @Component
-@Order(0)   // 在业务 ApplicationRunner 之前
+@Order(0) // 在业务 ApplicationRunner 之前
 @RequiredArgsConstructor
 public class FlywayMigrator implements ApplicationRunner {
 
@@ -45,11 +44,8 @@ public class FlywayMigrator implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        String location = "dev".equals(activeProfile)
-                ? "classpath:db/migration"
-                : "classpath:db/migration-prod";
-        log.info("[FLYWAY] starting migration: profile={} url={} location={}",
-                activeProfile, jdbcUrl, location);
+        String location = "dev".equals(activeProfile) ? "classpath:db/migration" : "classpath:db/migration-prod";
+        log.info("[FLYWAY] starting migration: profile={} url={} location={}", activeProfile, jdbcUrl, location);
 
         try {
             DataSource ds = DataSourceBuilder.create()

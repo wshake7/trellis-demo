@@ -1,6 +1,6 @@
 package com.wshake.api.common;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 /**
  * Nacos Config 配置格式回归测试。
@@ -89,7 +88,8 @@ class NacosConfigFormatTest {
         // 必须有可插拔开关（nacos.config.enabled + NACOS_CONFIG_ENABLED 占位）
         assertThat(content)
                 .as("must have nacos.config.enabled with NACOS_CONFIG_ENABLED placeholder")
-                .containsPattern("(?m)^nacos:\\s*\\n\\s+config:\\s*\\n\\s+enabled:\\s*\\$\\{NACOS_CONFIG_ENABLED:false\\}");
+                .containsPattern(
+                        "(?m)^nacos:\\s*\\n\\s+config:\\s*\\n\\s+enabled:\\s*\\$\\{NACOS_CONFIG_ENABLED:false\\}");
     }
 
     @Test
@@ -120,7 +120,9 @@ class NacosConfigFormatTest {
      */
     private String readFile(String path) throws IOException {
         File f = new File(path);
-        assertThat(f).as("file " + path + " (cwd=" + new File(".").getAbsolutePath() + ")").exists();
+        assertThat(f)
+                .as("file " + path + " (cwd=" + new File(".").getAbsolutePath() + ")")
+                .exists();
         try (InputStream in = new FileInputStream(f)) {
             try (Scanner s = new Scanner(in, StandardCharsets.UTF_8)) {
                 return s.useDelimiter("\\A").hasNext() ? s.next() : "";

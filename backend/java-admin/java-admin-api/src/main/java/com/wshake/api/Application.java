@@ -12,12 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author wshake
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {
-        "com.wshake.api",
-        "com.wshake.infra",
-        "com.wshake.service",
-        "com.wshake.common"
-})
+@ComponentScan(basePackages = {"com.wshake.api", "com.wshake.infra", "com.wshake.service", "com.wshake.common"})
 public class Application {
 
     public static void main(String[] args) {

@@ -1,21 +1,20 @@
 package com.wshake.service.user;
 
-import com.wshake.common.exception.AuthException;
-import com.wshake.service.entity.SysUser;
-import com.wshake.service.repository.SysUserRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import com.wshake.common.exception.AuthException;
+import com.wshake.service.entity.SysUser;
+import com.wshake.service.repository.SysUserRepository;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * {@link AuthService} 单元测试。
@@ -44,9 +43,7 @@ class AuthServiceTest {
 
         // For a deterministic test, use a hash generated for "admin123"
         // Hash generated at test time using sa-token BCrypt
-        SysUser userWithValidHash = fixture("admin",
-                cn.dev33.satoken.secure.BCrypt.hashpw("admin123"),
-                "Admin", 1);
+        SysUser userWithValidHash = fixture("admin", cn.dev33.satoken.secure.BCrypt.hashpw("admin123"), "Admin", 1);
         when(sysUserRepository.findByUsername("admin")).thenReturn(userWithValidHash);
 
         SysUser result = authService.login("admin", "admin123");
@@ -63,7 +60,8 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login("admin", "wrong"))
                 .isInstanceOf(AuthException.class)
-                .extracting("code").isEqualTo(2002);
+                .extracting("code")
+                .isEqualTo(2002);
     }
 
     @Test
@@ -72,28 +70,29 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login("nobody", "any"))
                 .isInstanceOf(AuthException.class)
-                .extracting("code").isEqualTo(2002);
+                .extracting("code")
+                .isEqualTo(2002);
 
         verify(sysUserRepository).findByUsername("nobody");
     }
 
     @Test
     void login_userDisabled_throwsAuthForbidden() {
-        SysUser disabled = fixture("admin",
-                cn.dev33.satoken.secure.BCrypt.hashpw("admin123"),
-                "Admin", 0);
+        SysUser disabled = fixture("admin", cn.dev33.satoken.secure.BCrypt.hashpw("admin123"), "Admin", 0);
         when(sysUserRepository.findByUsername("admin")).thenReturn(disabled);
 
         assertThatThrownBy(() -> authService.login("admin", "admin123"))
                 .isInstanceOf(AuthException.class)
-                .extracting("code").isEqualTo(2004);
+                .extracting("code")
+                .isEqualTo(2004);
     }
 
     @Test
     void login_blankUsername_throwsAuthInvalidCredentialsWithoutRepoCall() {
         assertThatThrownBy(() -> authService.login("", "any"))
                 .isInstanceOf(AuthException.class)
-                .extracting("code").isEqualTo(2002);
+                .extracting("code")
+                .isEqualTo(2002);
 
         verify(sysUserRepository, never()).findByUsername(any());
     }
@@ -102,7 +101,8 @@ class AuthServiceTest {
     void login_blankPassword_throwsAuthInvalidCredentialsWithoutRepoCall() {
         assertThatThrownBy(() -> authService.login("admin", ""))
                 .isInstanceOf(AuthException.class)
-                .extracting("code").isEqualTo(2002);
+                .extracting("code")
+                .isEqualTo(2002);
 
         verify(sysUserRepository, never()).findByUsername(any());
     }

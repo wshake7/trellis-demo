@@ -1,15 +1,14 @@
 package com.wshake.api.common;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wshake.common.result.ListResult;
 import com.wshake.common.result.ObjectResult;
 import com.wshake.common.result.Result;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 /**
  * {@link Result} 序列化测试（Q13 决策）。
@@ -36,7 +35,7 @@ class ResultFormatTest {
         assertThat(json).contains("\"data\":\"hello\"");
         // 验证不存在的字段
         assertThat(json).doesNotContain("\"traceId\"");
-        assertThat(json).doesNotContain("\"message\"");   // 旧字段名
+        assertThat(json).doesNotContain("\"message\""); // 旧字段名
     }
 
     @Test
@@ -47,7 +46,7 @@ class ResultFormatTest {
 
         assertThat(json).contains("\"code\":2002");
         assertThat(json).contains("\"msg\":\"凭证错误\"");
-        assertThat(json).doesNotContain("\"data\"");      // error 不带 data
+        assertThat(json).doesNotContain("\"data\""); // error 不带 data
         assertThat(json).doesNotContain("\"traceId\"");
         assertThat(json).doesNotContain("\"message\"");
     }

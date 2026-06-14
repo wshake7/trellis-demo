@@ -1,9 +1,8 @@
 package com.wshake.api.vo;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 /**
  * 用户信息 VO（{@code /api/v1/auth/info} 响应）。
