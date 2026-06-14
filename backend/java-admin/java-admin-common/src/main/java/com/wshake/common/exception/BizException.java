@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 业务异常基类。
  *
- * <p>所有受控的业务错误都应抛出 {@code BizException}，由
+ * 所有受控的业务错误都应抛出 {@code BizException}，由
  * {@code GlobalExceptionHandler} 统一转 {@code Result}。
  *
  * @author wshake
