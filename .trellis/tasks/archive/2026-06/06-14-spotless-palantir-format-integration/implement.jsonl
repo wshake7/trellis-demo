@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "4 模块结构 + spec 文件列表，确保 implement 子代理理解 java-admin 整体布局"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "明确 common/service/infra/api 四模块边界与 src/main、src/test 路径，spotless 默认 glob 需覆盖"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "当前 Lint 段落明确写不集成 Checkstyle / SpotBugs；本次任务将翻转该决策，需追加完整 Spotless + Checkstyle 演进说明"}
+{"file": "lefthook.yml", "reason": "现有 pre-commit 已含 vp staged；新 java-spotless (apply) 与 java-checkstyle (pre-push check) 步骤需与 vp staged 并存（parallel）"}
+{"file": "backend/java-admin/pom.xml", "reason": "父 POM 已有 maven-compiler-plugin 配置；spotless-maven-plugin + maven-checkstyle-plugin 需在父 POM <plugins> 注册让所有 4 个子模块继承"}
+{"file": ".trellis/tasks/06-14-spotless-palantir-format-integration/research/spotless-palantir-integration.md", "reason": "Phase 1.2 研究的 Spotless 2.x / palantir-java-format 2.x / maven-checkstyle-plugin 最新版本号、Palantir 官方 checkstyle.xml 路径、兼容结论"}
+{"file": ".trellis/tasks/06-14-spotless-palantir-format-integration/design.md", "reason": "设计稿（边界 / 兼容性 / 风险 / 回滚；含 Spotless + Checkstyle 两套配置）"}
+{"file": ".trellis/tasks/06-14-spotless-palantir-format-integration/implement.md", "reason": "执行计划（策略 / 闸门 / 清单 / 验证 / 提交策略；含 Checkstyle 落地）"}
