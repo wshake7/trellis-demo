@@ -11,7 +11,12 @@
 - **覆盖率**：本期**不**要求数字（dev-time 跑单测，不接 SonarQube）
 - **集成测试**：用 `@SpringBootTest(webEnvironment = RANDOM_PORT)` 跑全栈
 - **Mock**：用 `Mockito.mock()` / `@MockBean`（**不**用 PowerMock）
-- **Lint**：项目**不**集成 Checkstyle / SpotBugs（MVP 阶段）；依赖 IDE 提示 + 命名规范
+- **Lint / Format**：项目集成 **Spotless（palantir-java-format）** + **Checkstyle（Palantir 自家规则集）**。两者职责严格分层：
+  - **Spotless** 负责格式（whitespace / 缩进 / import / 换行）：`mvn spotless:apply` 全量格式化；lefthook pre-commit 自动 apply。
+  - **Checkstyle** 负责命名 / 复杂度 / 风格规约 / 强制规范（severity = error，绑 `verify` phase）：`mvn verify` 阻断；lefthook pre-push 跑 `mvn checkstyle:check`。
+  - **不**集成 SpotBugs / Error Prone（本期范围外）。
+  - 现有 4 模块代码以 `build-tools/checkstyle/checkstyle-suppressions.xml` 基线屏蔽；新写入文件**默认严格过关**，违规即 `mvn verify` 失败。
+  - 规则集与配置统一在 `backend/java-admin/build-tools/checkstyle/` 下，4 个子模块共享同一份规则。
 
 ---
 
@@ -237,26 +242,48 @@ curl -i -X POST http://localhost:4080/api/v1/auth/login \
 - [ ] `.trellis/spec/backend/index.md` 更新（如果新增 spec 文件）
 - [ ] README 增 / 改
 
+### 8.5 Java 工具链（Spotless + Checkstyle）
+
+- [ ] `backend/java-admin/build-tools/checkstyle/checkstyle.xml` 是 Palantir Baseline 规则集（来自 `palantir/gradle-baseline` 仓库）
+- [ ] `backend/java-admin/build-tools/checkstyle/checkstyle-suppressions.xml` 覆盖现有 4 模块的 main + test 共 8 个 glob
+- [ ] `backend/java-admin/build-tools/checkstyle/custom-suppressions.xml` 存在（Palantir 默认引用）
+- [ ] 父 POM `<plugins>` 注册 `spotless-maven-plugin` + `maven-checkstyle-plugin`，两者版本由 properties 锁定
+- [ ] `<sourceDirectories>` 限定 `src/main/java`，排除 `target/generated-sources/`（APT 输出不受人工控制）
+- [ ] `<propertyExpansion>` 注入 `config_loc=${maven.multiModuleProjectDirectory}/build-tools/checkstyle`，让 Palantir 自带的 `SuppressionFilter` 在多模块 reactor 中正确解析 `${config_loc}` 引用
+- [ ] `mvn spotless:check` 通过（apply 后 exit 0）
+- [ ] `mvn checkstyle:check` 通过（suppressions.xml 屏蔽现有代码）
+- [ ] `mvn verify` 通过（spotless + checkstyle + tests）
+- [ ] 故意在非屏蔽路径放违例 `*.java`，`mvn verify` 失败
+- [ ] lefthook `pre-commit` 接 `java-spotless`（apply + stage_fixed）；`pre-push` 接 `java-checkstyle`（check）；都带 glob + parallel
+- [ ] `LEFTHOOK=0 git commit ...` 与 `git commit --no-verify` 均能绕过钩子
+
 ---
 
 ## 9. 常见错误（防回归）
 
-| 错误                                                         | 现象                      | 规避                                       |
-| ------------------------------------------------------------ | ------------------------- | ------------------------------------------ |
-| Mock 了 final 类                                             | `Cannot mock final class` | Mockito 5 inline（`mockito-inline`）       |
-| `@SpringBootTest` 跑单元测试                                 | 启动慢、CI 慢             | 单元测试**不**起容器                       |
-| `@MockBean` 已 deprecated                                    | SB 3.4+ 用 `@MockitoBean` | 改 `@MockitoBean`                          |
-| 共享 `@SpringBootTest` 上下文                                | 测 A 跑完脏状态影响测 B   | 用 `@DirtiesContext` 或隔离 test class     |
-| 测试依赖执行顺序                                             | 一个测 fail 后续跟着 fail | 测之间独立，**不**共享 mutable state       |
-| `@Disabled` 屏蔽 fail 测试                                   | 漏洞埋雷                  | 修或删，**不**用 @Disabled 逃避            |
-| 测试数据库用 H2                                              | 与 MySQL 行为差异         | 测用真实 MySQL 容器（Testcontainers 未来） |
-| 集成测试写在 `src/test/java/.../XxxIT.java` 但 maven 不跑 IT | 测永远不跑                | 配置 `maven-failsafe-plugin`（未来）       |
+| 错误                                                         | 现象                                                  | 规避                                                                                                                                        |
+| ------------------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mock 了 final 类                                             | `Cannot mock final class`                             | Mockito 5 inline（`mockito-inline`）                                                                                                        |
+| `@SpringBootTest` 跑单元测试                                 | 启动慢、CI 慢                                         | 单元测试**不**起容器                                                                                                                        |
+| `@MockBean` 已 deprecated                                    | SB 3.4+ 用 `@MockitoBean`                             | 改 `@MockitoBean`                                                                                                                           |
+| 共享 `@SpringBootTest` 上下文                                | 测 A 跑完脏状态影响测 B                               | 用 `@DirtiesContext` 或隔离 test class                                                                                                      |
+| 测试依赖执行顺序                                             | 一个测 fail 后续跟着 fail                             | 测之间独立，**不**共享 mutable state                                                                                                        |
+| `@Disabled` 屏蔽 fail 测试                                   | 漏洞埋雷                                              | 修或删，**不**用 @Disabled 逃避                                                                                                             |
+| 测试数据库用 H2                                              | 与 MySQL 行为差异                                     | 测用真实 MySQL 容器（Testcontainers 未来）                                                                                                  |
+| 集成测试写在 `src/test/java/.../XxxIT.java` 但 maven 不跑 IT | 测永远不跑                                            | 配置 `maven-failsafe-plugin`（未来）                                                                                                        |
+| Checkstyle 把 APT 生成文件也扫了                             | 38+ 违例，**全部**在 `target/generated-sources/`      | 在 POM 设 `<sourceDirectories>${project.basedir}/src/main/java</sourceDirectories>`（只扫手写代码）                                         |
+| Checkstyle 报 `Property ${config_loc} has not been set`      | maven-checkstyle-plugin 3.6.0 不自动注入 `config_loc` | 在 POM `<configuration>` 加 `<propertyExpansion>config_loc=${maven.multiModuleProjectDirectory}/build-tools/checkstyle</propertyExpansion>` |
+| Palantir `checkstyle.xml` 找不到 suppressions                | 启动报 `Unable to find suppressions file`             | 必须是 `${config_loc}/checkstyle-suppressions.xml`（Palantir 强制名，**不能**叫 `suppressions.xml`）                                        |
+| suppressions glob 用了相对项目根的路径                       | 多模块 reactor 解析失败                               | 用相对子模块的路径（如 `java-admin-common/src/main/java/.*`），maven-checkstyle-plugin 会自动加 `${project.basedir}/` 前缀                  |
+| `mvn verify` 没跑 Checkstyle                                 | 只在 pre-push / `mvn checkstyle:check` 跑             | `<execution>` 必须绑 `verify` phase；这样 `mvn package` / `mvn install` 也兜底                                                              |
+| lefthook pre-commit 没 re-add 格式化后的文件                 | commit 用了未格式化代码                               | `mvn spotless:apply && git add backend/java-admin`，并加 `stage_fixed: true`                                                                |
 
 ---
 
 ## 10. 不在范围内
 
 - ❌ SonarQube / Code Coverage 数字（dev-time 跑单测）
+- ❌ SpotBugs / Error Prone（静态分析工具仅留 Checkstyle）
 - ❌ 性能测试（JMH / Gatling）
 - ❌ 契约测试（Pact）
 - ❌ 端到端 UI 自动化（Selenium / Playwright）
@@ -265,4 +292,5 @@ curl -i -X POST http://localhost:4080/api/v1/auth/login \
 ---
 
 **本文件由 AI 在 2026-06-14 任务 `06-14-java-admin-backend` 中首次落盘；多次迭代后定稿。**
+**2026-06-14 演进**：集成 Spotless + palantir-java-format + Checkstyle（任务 `06-14-spotless-palantir-format-integration`）。原"不集成 Checkstyle"决策被翻转；详见第 1 节 "Lint / Format" 与 `backend/java-admin/build-tools/checkstyle/` 目录。
 **AI 后续写代码前必须先读本文件，并在 `implement.jsonl` 中登记。**

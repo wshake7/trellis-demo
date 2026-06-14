@@ -12,6 +12,13 @@
 #   - `git commit --no-verify ...`       # skip via git flag
 #   - `LEFTHOOK=0 pnpm exec lefthook run pre-commit`  # bypass when invoking directly
 #
+# Java toolchain (backend/java-admin, 2026-06-14):
+#   - pre-commit.java-spotless: runs `mvn spotless:apply` to format staged *.java
+#     files with palantir-java-format and re-stages any changes.
+#   - pre-push.java-checkstyle:  runs `mvn checkstyle:check` against the Palantir
+#     Baseline ruleset to fail fast on naming / complexity / style violations.
+#     (Full enforcement also lives at `mvn verify` via maven-checkstyle-plugin.)
+#
 # Docs:
 #   - https://lefthook.dev/configuration/
 #   - https://viteplus.dev/guide/commit-hooks
@@ -21,6 +28,25 @@ pre-commit:
   # only against staged files. `pnpm exec` ensures `vp` is resolved from
   # `node_modules/.bin` even when lefthook runs in a subshell without the
   # workspace's PATH.
+  parallel: true
   commands:
     staged:
+      # Frontend / TS / Vue / global JS staged-file pipeline (Vite+).
       run: pnpm exec vp staged
+    java-spotless:
+      # Backend Java formatter — runs only when at least one staged file matches.
+      # Spotless is `apply`-mode here (modifies files in-place) so we re-add the
+      # touched paths via `git add` + lefthook's `stage_fixed: true`.
+      glob: "backend/java-admin/**/src/{main,test}/java/**/*.java"
+      run: mvn -B -q -f backend/java-admin/pom.xml spotless:apply && git add backend/java-admin
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    java-checkstyle:
+      # Backend static check — fail fast on naming / complexity / style violations.
+      # The same ruleset also runs at `mvn verify` (maven-checkstyle-plugin bound
+      # to verify phase) as a safety net; pre-push is the fast-feedback layer.
+      glob: "backend/java-admin/**/src/{main,test}/java/**/*.java"
+      run: mvn -B -f backend/java-admin/pom.xml checkstyle:check

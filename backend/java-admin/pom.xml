@@ -41,6 +41,10 @@
         <flyway.version>10.20.0</flyway.version>
         <spring.flayway.verison>4.0.7</spring.flayway.verison>
         <spring-cloud-alibaba.version>2025.1.0.0</spring-cloud-alibaba.version>
+
+        <!-- Java 工具链（2026-06-14 集成） -->
+        <spotless.version>3.6.0</spotless.version>
+        <palantir-java-format.version>2.92.0</palantir-java-format.version>
     </properties>
 
     <dependencyManagement>
@@ -177,5 +181,82 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <!-- Spotless: palantir-java-format 自动格式化
+                 通过 `mvn spotless:apply` 全量格式化；
+                 `mvn spotless:check` 仅检查（exit ≠ 0 表示未格式化）。
+                 lefthook pre-commit 也会调 apply 并 re-add。 -->
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <java>
+                        <palantirJavaFormat>
+                            <version>${palantir-java-format.version}</version>
+                        </palantirJavaFormat>
+                    </java>
+                </configuration>
+            </plugin>
+
+            <!-- Checkstyle: Palantir 自家规则集（命名 / 复杂度 / 风格规约）
+                 severity = error；绑 verify phase；mvn verify / mvn package 会跑。
+                 lefthook pre-push 也跑 `mvn checkstyle:check`（fast feedback）。
+                 规则集与配置在 build-tools/checkstyle/ 下：
+                   - checkstyle.xml          Palantir Baseline 规则集（gradle-baseline 仓库 raw）
+                   - checkstyle-suppressions.xml   现有 4 模块基线屏蔽
+                   - custom-suppressions.xml       用户自定义（当前为空）
+
+                 版本说明：SB 4.0.7 父 POM 的 pluginManagement 已经锁定了
+                 maven-checkstyle-plugin 3.6.0；此处显式声明版本号只是为了让 Maven
+                 不再 warn "build.plugins.plugin.version is missing"。 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <configLocation>${maven.multiModuleProjectDirectory}/build-tools/checkstyle/checkstyle.xml</configLocation>
+                    <suppressionsLocation>${maven.multiModuleProjectDirectory}/build-tools/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <failOnViolation>true</failOnViolation>
+                    <violationSeverity>error</violationSeverity>
+                    <consoleOutput>true</consoleOutput>
+                    <linkXRef>false</linkXRef>
+                    <!--
+                      Skip generated sources (Easy-Query APT output under
+                      target/generated-sources/) — those files are machine-written
+                      and not under our control. Only check hand-written source.
+                    -->
+                    <sourceDirectories>
+                        <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+                    </sourceDirectories>
+                    <testSourceDirectories>
+                        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+                    </testSourceDirectories>
+                    <!--
+                      `config_loc` is referenced by Palantir's checkstyle.xml
+                      via its built-in SuppressionFilter (reads
+                      ${config_loc}/checkstyle-suppressions.xml and
+                      ${config_loc}/custom-suppressions.xml). The maven-checkstyle-plugin
+                      doesn't set it automatically, so we pass it via the
+                      `propertyExpansion` parameter (which supports Maven
+                      variable interpolation). We use
+                      `${maven.multiModuleProjectDirectory}` (the directory of
+                      the parent POM) so the same config works for both the
+                      parent POM and every child module.
+                    -->
+                    <propertyExpansion>config_loc=${maven.multiModuleProjectDirectory}/build-tools/checkstyle</propertyExpansion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle-verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
