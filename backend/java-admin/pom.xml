@@ -131,6 +131,13 @@
                 <version>${knife4j.version}</version>
             </dependency>
 
+            <!-- Swagger / OpenAPI v3 注解(纯注解 JAR,供 common 在 Result 上加 @Schema 使用) -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations-jakarta</artifactId>
+                <version>2.2.19</version>
+            </dependency>
+
             <!-- Flyway -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

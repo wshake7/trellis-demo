@@ -22,6 +22,7 @@
 | [Flyway 迁移规范](./infra-flyway.md)             | V1/V2 命名、dev/prod 隔离、baseline 策略               | 已落盘（2026-06-14）                                  |
 | [Docker Compose 规范](./infra-docker-compose.md) | dev 依赖编排（MySQL+Redis+Nacos+Adminer）              | 已落盘（2026-06-14）                                  |
 | [Nacos Config 规范（可插拔）](./infra-nacos.md)  | @ConditionalOnProperty 开关、双 dataId、独立 namespace | 已落盘（2026-06-14）                                  |
+| [Knife4j 注解规范](./knife4j-guidelines.md)              | Controller / DTO / VO / Result 注解约定、OpenApiConfig 形态 | 已落盘（2026-06-15，参考 `06-15-knife4j-annotations`） |
 
 ---
 

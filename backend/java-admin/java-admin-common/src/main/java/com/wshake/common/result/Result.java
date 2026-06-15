@@ -2,6 +2,7 @@ package com.wshake.common.result;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Data;
 
@@ -20,12 +21,18 @@ import lombok.Data;
 public class Result<T> {
 
     /** 业务码：0 = 成功；非 0 见 {@link ResultCode} */
+    @Schema(
+            description = "业务码;0=成功,非 0 见 ResultCode 枚举",
+            example = "0",
+            allowableValues = {"0", "1001", "1002", "1003", "2001", "2002", "2003", "2004"})
     private int code;
 
     /** 人类可读消息（Q13 决策：原 message → msg） */
+    @Schema(description = "人类可读消息", example = "ok")
     private String msg;
 
     /** 业务数据；error 时为 {@code null}（Jackson 不输出） */
+    @Schema(description = "业务数据;error 时为 null(Jackson 不输出该字段)")
     private T data;
 
     public Result() {}
