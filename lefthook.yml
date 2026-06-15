@@ -55,6 +55,30 @@ pre-commit:
       run: codegraph sync
       stage_fixed: false
 
+post-checkout:
+  # Run after git checkout, pull, or merge to sync codegraph with the latest code.
+  commands:
+    codegraph-sync:
+      run: codegraph sync
+
+post-merge:
+  # Run after git merge or pull to sync codegraph with merged changes.
+  commands:
+    codegraph-sync:
+      run: codegraph sync
+
+post-rewrite:
+  # Run after git rebase or amend to sync codegraph with rewritten history.
+  commands:
+    codegraph-sync:
+      run: codegraph sync
+
+post-commit:
+  # Run after successful commit to sync codegraph with the new commit.
+  commands:
+    codegraph-sync:
+      run: codegraph sync
+
 pre-push:
   parallel: true
   commands:
