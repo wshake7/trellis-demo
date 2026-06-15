@@ -7,6 +7,8 @@ install i:
 init: check-vp check-context7 check-codegraph
 	@echo ""
 	@echo "✔ Toolchain ready: vp, ctx7, codegraph"
+	@echo "→ Initializing codegraph..."
+	@codegraph init || echo "⚠ codegraph init failed (may already be initialized)"
 
 check-vp:
 	@if command -v vp >/dev/null 2>&1; then \

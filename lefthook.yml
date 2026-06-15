@@ -50,6 +50,10 @@ pre-commit:
       glob: "backend/java-admin/**/src/{main,test}/java/**/*.java"
       run: mvn -B -q -f backend/java-admin/pom.xml spotless:apply && git add backend/java-admin
       stage_fixed: true
+    codegraph-sync:
+      # Sync codegraph index to keep AI context up-to-date with the latest changes.
+      run: codegraph sync
+      stage_fixed: false
 
 pre-push:
   parallel: true
