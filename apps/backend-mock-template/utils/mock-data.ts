@@ -608,9 +608,9 @@ function buildDictTypeSeeds(): DictType[] {
     },
     {
       id: 5,
-      code: "sys_common_status",
-      name: "通用状态",
-      remark: "正常 / 停用",
+      code: "sys_switch_status",
+      name: "开关状态",
+      remark: "跨模块通用启用/禁用状态",
       is_enabled: 1,
       deleted_at: 0,
       created_at: now,
@@ -667,9 +667,14 @@ function buildDictDataSeeds(): DictData[] {
   entries.push(seed(1031, 4, "1", "通知", 0));
   entries.push(seed(1032, 4, "2", "公告", 1));
   entries.push(seed(1033, 4, "3", "提醒", 2));
-  // sys_common_status (type_id=5)
-  entries.push(seed(1041, 5, "0", "正常", 0, 1));
-  entries.push(seed(1042, 5, "1", "停用", 1));
+  // sys_switch_status (type_id=5)
+  // sort 单调递增 1..6（对齐 backend/db/schema_data.sql 与 design.md）
+  entries.push(seed(1041, 5, "enabled", "启用", 1, 0, "general", ""));
+  entries.push(seed(1042, 5, "disabled", "禁用", 2, 1, "general", ""));
+  entries.push(seed(1051, 5, "enabled", "启用", 3, 0, "react-admin", "success"));
+  entries.push(seed(1052, 5, "disabled", "禁用", 4, 1, "react-admin", "error"));
+  entries.push(seed(1061, 5, "enabled", "启用", 5, 0, "vue-admin", "success"));
+  entries.push(seed(1062, 5, "disabled", "禁用", 6, 1, "vue-admin", "error"));
   return entries;
 }
 
