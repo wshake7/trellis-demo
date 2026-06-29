@@ -618,6 +618,18 @@ function buildDictTypeSeeds(): DictType[] {
       created_by: 0,
       updated_by: 0,
     },
+    {
+      id: 10,
+      code: "sys_platform",
+      name: "平台",
+      remark: "前端归属平台（general / react-admin / vue-admin）",
+      is_enabled: 1,
+      deleted_at: 0,
+      created_at: now,
+      updated_at: now,
+      created_by: 0,
+      updated_by: 0,
+    },
   ];
   return baseTypes;
 }
@@ -675,6 +687,12 @@ function buildDictDataSeeds(): DictData[] {
   entries.push(seed(1052, 5, "disabled", "禁用", 4, 1, "react-admin", "error"));
   entries.push(seed(1061, 5, "enabled", "启用", 5, 0, "vue-admin", "success"));
   entries.push(seed(1062, 5, "disabled", "禁用", 6, 1, "vue-admin", "error"));
+  // sys_platform (type_id=10)
+  // 平台字段的字典驱动源：value = platform 字符串，platform 字段 = value（自洽）。
+  // tag_type 全部置空，平台 CellTag 不着色（与 design.md「sys_platform 字典契约」一致）。
+  entries.push(seed(2001, 10, "general", "通用", 1, 1, "general", ""));
+  entries.push(seed(2002, 10, "react-admin", "React Admin", 2, 0, "react-admin", ""));
+  entries.push(seed(2003, 10, "vue-admin", "Vue Admin", 3, 0, "vue-admin", ""));
   return entries;
 }
 
