@@ -16,6 +16,8 @@ Thumbs.db
 
 # 日志
 logs/
+# 例外:wiki 的 logs/ 目录(pro-workflow 的 maintenance log,需要随仓库提交)
+!.claude/wikis/**/logs/
 *.log
 
 # 环境变量

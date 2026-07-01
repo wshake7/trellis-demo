@@ -1,12 +1,12 @@
-.PHONY: install i init check-vp check-context7 check-codegraph
+.PHONY: install i init check-vp check-codegraph
 
 install i:
 	vp i
 	cd apps/vue-vben-admin && vp i
 
-init: check-vp check-context7 check-codegraph
+init: check-vp check-codegraph
 	@echo ""
-	@echo "✔ Toolchain ready: vp, ctx7, codegraph"
+	@echo "✔ Toolchain ready: vp, codegraph (context7 via smart-search — no standalone install)"
 	@echo "→ Initializing codegraph..."
 	@codegraph init || echo "⚠ codegraph init failed (may already be initialized)"
 
@@ -20,18 +20,6 @@ check-vp:
 			MINGW*|MSYS*|CYGWIN*) powershell -NoProfile -Command "irm https://vite.plus/ps1 | iex" ;; \
 			*) echo "✗ Unsupported OS: $$(uname -s). See https://viteplus.dev/guide/"; exit 1 ;; \
 		esac; \
-	fi
-
-check-context7:
-	@if command -v ctx7 >/dev/null 2>&1; then \
-		echo "✔ ctx7 (context7) already installed"; \
-	elif command -v npm >/dev/null 2>&1; then \
-		echo "→ Installing ctx7 (context7) via npm..."; \
-		npm install -g ctx7; \
-		echo "ℹ Run 'npx ctx7 setup' to wire context7 into your agent (OAuth + skill/MCP)."; \
-	else \
-		echo "✗ npm not found. Install Node.js 18+ first, then re-run. See https://github.com/upstash/context7#installation"; \
-		exit 1; \
 	fi
 
 check-codegraph:
