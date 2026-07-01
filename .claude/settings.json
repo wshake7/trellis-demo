@@ -7,72 +7,38 @@
   },
   "hooks": {
     "SessionStart": [
+    ],
+    "PreToolUse": [
       {
-        "matcher": "startup",
+        "matcher": "Grep|Glob|Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/session-start.py",
-            "timeout": 30
-          }
-        ]
-      },
-      {
-        "matcher": "clear",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python .claude/hooks/session-start.py",
-            "timeout": 30
-          }
-        ]
-      },
-      {
-        "matcher": "compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python .claude/hooks/session-start.py",
-            "timeout": 30
+            "command": "node '/Users/wshake/.claude/hooks/gitnexus/gitnexus-hook.cjs'",
+            "timeout": 10,
+            "statusMessage": "Enriching with GitNexus graph context..."
           }
         ]
       }
     ],
-    "PreToolUse": [
+    "PostToolUse": [
       {
-        "matcher": "Task",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/inject-subagent-context.py",
-            "timeout": 30
-          }
-        ]
-      },
-      {
-        "matcher": "Agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python .claude/hooks/inject-subagent-context.py",
-            "timeout": 30
+            "command": "node '/Users/wshake/.claude/hooks/gitnexus/gitnexus-hook.cjs'",
+            "timeout": 10,
+            "statusMessage": "Checking GitNexus index freshness..."
           }
         ]
       }
     ],
     "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python .claude/hooks/inject-workflow-state.py",
-            "timeout": 15
-          }
-        ]
-      }
     ]
   },
   "enabledPlugins": {
-    "claude-hud@claude-hud": true
+    "claude-hud@claude-hud": true,
+    "pro-workflow@pro-workflow": true
   }
 }

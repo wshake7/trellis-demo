@@ -1,8 +1,0 @@
-{"file": ".trellis/tasks/06-14-admin-db-design/prd.md", "reason": "验收检查：以 prd.md 的 §5 验收标准与 §4 决策记录为准"}
-{"file": ".trellis/tasks/06-14-admin-db-design/design.md", "reason": "设计一致性检查：DDL 是否实现 design.md 中的所有约定与权衡"}
-{"file": ".trellis/tasks/06-14-admin-db-design/implement.md", "reason": "执行完整性检查：实施清单是否全部完成、验证命令是否通过"}
-{"file": ".trellis/spec/backend/database-guidelines.md", "reason": "项目 DB 规范（当前为模板）"}
-{"file": "backend/db/schema.sql", "reason": "交付主文件：必须通过 MySQL 8 实际执行验证"}
-{"file": "backend/db/docs/db-conventions.md", "reason": "约定文档：命名、软删、审计、索引、字符集"}
-{"file": "backend/db/docs/tables.md", "reason": "字段速查：20+3 张表必须全部覆盖"}
-{"file": "backend/db/docs/er.md", "reason": "ER 关系图：所有 M:N / 1:N 关系必须描述"}
