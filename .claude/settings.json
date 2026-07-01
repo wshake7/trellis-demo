@@ -6,8 +6,7 @@
     "defaultMode": "auto"
   },
   "hooks": {
-    "SessionStart": [
-    ],
+    "SessionStart": [],
     "PreToolUse": [
       {
         "matcher": "Grep|Glob|Bash",
@@ -34,8 +33,7 @@
         ]
       }
     ],
-    "UserPromptSubmit": [
-    ]
+    "UserPromptSubmit": []
   },
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
