@@ -26,7 +26,7 @@ trellis-demo/
 |------|------|--------------------|
 | `apps/website-template` | Vue 3 + Vite+ 网站模板 | ✓ |
 | `apps/backend-mock-template` | Nitro mock 后端(端口 4000) | ✓ |
-| `apps/vue-vben-admin` | 自包含 monorepo(Vue3 + NaiveUI/Antdv-next) | ✗ **主动排除** |
+| `apps/vue-vben-admin` | 自包含 monorepo(Vue3 + Antdv-next) | ✗ **主动排除** |
 | `apps/react-admin` | 自包含 monorepo(React 19 + Ant Design Pro 6) | ✗ **主动排除** |
 
 排除规则在 `pnpm-workspace.yaml` 里写得很直白[^src-003]:

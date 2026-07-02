@@ -28,7 +28,7 @@
 |------|----|----------------|------|
 | `apps/website-template` | Vue 3 + Vite+(`vp dev`) | 默认 Vite 端口 | [^src-018] |
 | `apps/backend-mock-template` | Nitro(nitropack),固定 dev 端口 4000 | jsonwebtoken + @faker-js/faker | [^src-019] [^src-020] |
-| `apps/vue-vben-admin` | Vue 3 + Vben(NaiveUI / Antdv next),自带 turbo + lefthook | monorepo,有内部 catalog | [^src-010] [^src-011] [^src-012] |
+| `apps/vue-vben-admin` | Vue 3 + Vben(Antdv next),自带 turbo + lefthook | monorepo,有内部 catalog | [^src-010] [^src-011] [^src-012] |
 | `apps/react-admin` | React 19 + Ant Design Pro 6 + Vite 8 | 自带 pnpm workspace | [^src-014] [^src-015] [^src-017] |
 | `packages/utils-template` | TS 包(`vp pack` 产 ESM),用 `@typescript/native-preview` | tsdown 出 `dist/index.mjs` | [^src-021] |
 | `backend/java-admin` | Maven,palantir-java-format + checkstyle + Error Prone 2.50 | 见 pom.xml | [^src-022] |

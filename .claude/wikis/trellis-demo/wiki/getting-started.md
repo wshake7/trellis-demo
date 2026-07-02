@@ -33,8 +33,7 @@ cd apps/vue-vben-admin && vp install
 | 脚本 | 作用 | 命令实际展开 |
 |------|------|--------------|
 | `pnpm dev:mock` | 起后端 mock | `vp run backend-mock-template#start` → Nitro `--port 4000`[^src-019] |
-| `pnpm dev:vadmin` | vue-vben-admin NaiveUI 风格 | `pnpm -C apps/vue-vben-admin dev:naive`[^src-010] |
-| `pnpm dev:vadmin2` | vue-vben-admin Antdv next 风格 | `pnpm -C apps/vue-vben-admin dev:antdv-next`[^src-010] |
+| `pnpm dev:vadmin` | vue-vben-admin Antdv next 风格 | `pnpm -C apps/vue-vben-admin dev:antdv-next`[^src-010] |
 | `pnpm dev:radmin` | react-admin | `pnpm -C apps/react-admin dev`[^src-014] |
 
 ## 四、收尾校验

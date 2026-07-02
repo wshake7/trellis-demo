@@ -30,9 +30,8 @@
 
 根 `package.json` 暴露的脚本都 `-C` 到子目录执行[^src-002] [^src-010]:
 
-- `pnpm dev:vadmin` → `pnpm -C apps/vue-vben-admin dev:naive` —— NaiveUI 风格
-- `pnpm dev:vadmin2` → `pnpm -C apps/vue-vben-admin dev:antdv-next` —— Antdv next 风格
-- 还有 `dev:docs` / `dev:play` / `build:naive` / `build:analyze` 等子仓内部脚本[^src-010]
+- `pnpm dev:vadmin` → `pnpm -C apps/vue-vben-admin dev:antdv-next` —— Antdv next 风格
+- 还有 `dev:docs` / `dev:play` / `build:analyze` 等子仓内部脚本[^src-010]
 
 ## 子仓自己的栈
 
@@ -55,7 +54,7 @@
 
 ## 引用
 
-[^src-002]: `package.json`(根,`dev:vadmin*` 脚本)
+[^src-002]: `package.json`(根,`dev:vadmin` 脚本)
 [^src-003]: `pnpm-workspace.yaml`(排除规则)
 [^src-004]: `vite.config.ts`(ignorePatterns)
 [^src-006]: `lefthook.yml`(根,不覆盖子仓)
